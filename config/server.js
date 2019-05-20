@@ -18,7 +18,6 @@ var io = require('socket.io');
 
 var users = [];
 
-
 /* setar as variáveis 'view engine' e 'views' do express */
 app.set('view engine', 'ejs');
 app.set('views', './app/views');
@@ -63,7 +62,6 @@ s.on('connection', (socket) => {//É mostrado quando alguem se conecta
 	})
 	
 })
-
 
 /* exportar o objeto app */
 module.exports = app;
