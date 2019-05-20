@@ -41,10 +41,6 @@ consign()
 	.into(app);
 
 /* parametrizar a porta de escuta */
-var server = app.listen(3000, function(){
-	console.log('Servidor online');
-})
-
 var s = io(server);
 
 s.on('connection', (socket) => {//É mostrado quando alguem se conecta 
