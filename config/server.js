@@ -42,7 +42,7 @@ consign()
 
 /* parametrizar a porta de escuta */
 var server = app.listen(8080, function(){
-	console.log('Servidor online');
+	console.log('Servidor online e ativo');
 })
 
 var s = io(server);
