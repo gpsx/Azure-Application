@@ -5,17 +5,28 @@ module.exports = function(application){
 	users = application.get('users');
 
 	application.use((req,res,next)=>{
-		console.log('entrouuuu '+req.url);
-		next();
+		if (req.url != '/login' || req.url != '/register' || !req.session.auth) {
+			res.redirect('/login');
+		}else{
+			next();
+		}
+		
+		
 	});
 	
-	application.get('/', function(req, res){
+	application.get('/login', function(req, res){
+
+		res.render('autentication/login', {r : {}, l : {}, c : {}});
+			
+	});
+
+	application.get('/register', function(req, res){
 
 		sql.connect(config).then(() => {
 			return sql.query`Select * from Clientes`
 		}).then(result => {
 			//console.log(result);
-			res.render('login', {r : {}, l : {}, c : result.recordset});	
+			res.render('autentication/register', {r : {}, l : {}, c : result.recordset});	
 			sql.close()
 		}).catch(err => {
 			console.log(err);
