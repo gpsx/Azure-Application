@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Metro Redux</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Maven+Pro|Yrsa|Press+Start+2P" rel="stylesheet">
+    <link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container nes-container with-title">
+        <p class="title">Linhas</p>
+        <input type="text" class="nes-input" id="linha">
+        <button class="nes-btn btn-block is-error mt-3" onclick="addLine()">Cadastrar</button>
+
+        <div class="container nes-container with-title mt-3">
+            <p class="title">Resultado</p>
+            <button class="nes-btn btn-block is-error mt-3" onclick="showAll()">Relatório</button>
+            <p id="resultado"></p>
+        </div>
+    </div>
+
+</body>
+<script>
+    var allLinhas = [ "azul" , "verde", "vermelha" , "amarela" , "lilás"];
+    var Lines = [];
+
+    function verifyLine() {
+        for (let i = 0; i < allLinhas.length; i++) {
+           if (linha == mLinhas[i]) {
+               auth = true;
+           }
+           !auth ? resultado.innerHTML = "Linha não existe. Cadastro inválido" : addLine();
+        }
+    }
+
+    function addLine() {
+        Lines.push(linha.value);
+    }
+
+    function showAll() {
+        for (let i = 0; i < allLinhas.length; i++) {
+
+        }
+    }
+</script>
+</html>

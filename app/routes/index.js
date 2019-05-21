@@ -3,6 +3,11 @@ var sql = require('mssql')
 
 module.exports = function(application){
 	users = application.get('users');
+
+	application.use((req,res,next)=>{
+		console.log('entrouuuu '+req.url);
+		next();
+	});
 	
 	application.get('/', function(req, res){
 
@@ -42,6 +47,7 @@ module.exports = function(application){
 					console.log("Chegui");
 					
 					auth = true;
+					req.session.auth = true;
 				}	
 			}
 			auth ? res.send('Login Correto!') : res.redirect('/');
@@ -74,6 +80,10 @@ module.exports = function(application){
 		})
 	});
 	application.get('/postlogin', function(req, res){
-		res.render("postlogin")
+		if(req.session.auth) {
+			res.render('postlogin')
+		}else{
+			res.redirect('/');
+		}
 	});
 }
