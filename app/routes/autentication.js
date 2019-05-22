@@ -5,18 +5,13 @@ module.exports = function(application){
 	users = application.get('users');
 
 	application.use((req,res,next)=>{
-		if (req.url != '/login' || req.url != '/register' || !req.session.auth) {
-			res.redirect('/login');
-		}else{
-			next();
-		}
-		
-		
+		console.log(req.url);
+		next();
 	});
 	
 	application.get('/login', function(req, res){
 
-		res.render('autentication/login', {r : {}, l : {}, c : {}});
+		res.render('autentication/login', {n: 'Login'});
 			
 	});
 
