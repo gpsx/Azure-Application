@@ -16,24 +16,12 @@ module.exports = function(application){
 	});
 
 	application.get('/register', function(req, res){
-
-		sql.connect(config).then(() => {
-			return sql.query`Select * from Clientes`
-		}).then(result => {
-			//console.log(result);
-			res.render('autentication/register', {r : {}, l : {}, c : result.recordset});	
-			sql.close()
-		}).catch(err => {
-			console.log(err);
-			sql.close()
-			res.send('Falha ao estabelecer conexão com o banco', err);	
-		});
-			
+		res.render('autentication/register', {n: 'Registrar-se'});		
 	});
 
 	application.post('/login', function(req, res){
-		var login = req.body;
-		console.log(login);
+		var register = req.body;
+		console.log(register);
 		
 		var auth = false;
 		// for(user of users){
@@ -43,47 +31,43 @@ module.exports = function(application){
 		// }
 		// auth ? res.send('Login Correto!') : res.redirect('/');
 
+		
+	});
+	application.post('/register', function(req, res){
+		var register = req.body;
+		console.log(register);
+		
+
 		sql.connect(config).then(() => {
-			return sql.query`Select * from Usuarios`
+			return sql.query`Select * from Chaves where ${register.key}`
 		}).then(result => {
-			for(user of result.recordset){
-				console.log(user.Nome, user.Senha);
-				
-			    if (user.Nome == login.username && user.Senha == login.pass) {
-					console.log("Chegui");
-					
-					auth = true;
-					req.session.auth = true;
-				}	
-			}
-			auth ? res.send('Login Correto!') : res.redirect('/');
+			console.log(result);
+			
+			res.send(result);
 			sql.close()
 		}).catch(err => {
 			console.log(err);
 			sql.close()
 			res.send('Falha ao estabelecer conexão com o banco');	
 		});
-	});
-	application.post('/register', function(req, res){
-		var register = req.body;
 
-		sql.connect(config, err => {
-			// ... error checks
+		// sql.connect(config, err => {
+		// 	// ... error checks
 		 
-			const request = new sql.Request()
-			request.stream = true // You can set streaming differently for each request
-			request.query(`INSERT INTO Usuarios VALUES ('${register.name}', '${register.email}','${register.password}', ${register.fkIDclientes})`) // or request.execute(procedure)
+		// 	const request = new sql.Request()
+		// 	request.stream = true // You can set streaming differently for each request
+		// 	request.query(`INSERT INTO Usuarios VALUES ('${register.name}', '${register.email}','${register.password}', ${register.fkIDclientes})`) // or request.execute(procedure)
 		 
-			request.on('error', err => {
-				res.send(err)
-			})
-			request.on('done', result => {
-				console.log(result);
-				res.redirect('/');
-				sql.close();
-			})
+		// 	request.on('error', err => {
+		// 		res.send(err)
+		// 	})
+		// 	request.on('done', result => {
+		// 		console.log(result);
+		// 		res.redirect('/');
+		// 		sql.close();
+		// 	})
 			
-		})
+		// })
 	});
 	application.get('/postlogin', function(req, res){
 		if(req.session.auth) {
