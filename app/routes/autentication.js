@@ -1,18 +1,16 @@
 var config = require('../../config/db')
 var sql = require('mssql')
 
+
 module.exports = function(application){
-	users = application.get('users');
 
 	application.use((req,res,next)=>{
 		console.log(req.url);
 		next();
 	});
 	
-	application.get('/login', function(req, res){
-
-		res.render('autentication/login', {n: 'Login'});
-			
+	application.get('/login', function(req, res){	
+		res.render('autentication/login', {n: 'Login'});			
 	});
 
 	application.get('/register', function(req, res){
@@ -20,60 +18,124 @@ module.exports = function(application){
 	});
 
 	application.post('/login', function(req, res){
-		var register = req.body;
-		console.log(register);
-		
-		var auth = false;
-		// for(user of users){
-        //     if (user.username == login.username && user.password == login.pass) {
-		// 		auth = true;
-		// 	}          
-		// }
-		// auth ? res.send('Login Correto!') : res.redirect('/');
-
-		
-	});
-	application.post('/register', function(req, res){
-		var register = req.body;
-		console.log(register);
-		
-
+		var user = req.body;
+		console.log(user);
 		sql.connect(config).then(() => {
-			return sql.query`Select * from Chaves where ${register.key}`
+			return sql.query`Select * from Usuario where Usuario = ${user.username} and Senha = ${user.pass}`
 		}).then(result => {
-			console.log(result);
-			
-			res.send(result);
-			sql.close()
+			sql.close();						
+			autenticateLogin(res, result.recordset)
 		}).catch(err => {
 			console.log(err);
 			sql.close()
 			res.send('Falha ao estabelecer conexão com o banco');	
 		});
 
-		// sql.connect(config, err => {
-		// 	// ... error checks
-		 
-		// 	const request = new sql.Request()
-		// 	request.stream = true // You can set streaming differently for each request
-		// 	request.query(`INSERT INTO Usuarios VALUES ('${register.name}', '${register.email}','${register.password}', ${register.fkIDclientes})`) // or request.execute(procedure)
-		 
-		// 	request.on('error', err => {
-		// 		res.send(err)
-		// 	})
-		// 	request.on('done', result => {
-		// 		console.log(result);
-		// 		res.redirect('/');
-		// 		sql.close();
-		// 	})
-			
-		// })
+		
 	});
-	application.get('/postlogin', function(req, res){
+	application.post('/register', function(req, res){ ;
+		register(req.body, req, res);
+	});
+	application.get('/postlogin', (req, res)=>{
 		if(req.session.auth) {
 			res.render('postlogin')
 		}else{
 			res.redirect('/');
 		}
 	});
+	autenticateLogin = (res, result) =>{
+		console.log(result);
+		if (result.length <= 0) {
+			res.redirect('/register');
+		}else{
+			req.session.user = result;
+			res.redirect('/');
+		}
+	}
+	register = async (user, req, res) => {
+		queryKey(user, req, res);
+	}
+
+	queryKey = (user, req, res) => {
+		sql.connect(config).then(() => {
+			return sql.query`Select * from Chaves where chave = ${user.key}`
+		}).then(result => {
+			sql.close()			
+			if (verifyKey(result.recordset)) {
+				addClient(user, req, res)
+			}else{
+				renderAuth(res, 'register', 'Registrar-se');
+			}
+			
+		}).catch(err => {
+			console.log(err);
+			sql.close()
+			res.send('Falha ao estabelecer conexão com o banco');	
+		});
+	} 
+
+	verifyKey = (key)=>{
+		console.log(key);		
+		if (key == [] || key[0].Estado == 'inativo') {
+			return false
+		}else{
+			return true
+		}
+	}
+
+	addClient = (client, req, res)=>{
+		sql.connect(config, err => {
+			// ... error checks
+		 
+			const request = new sql.Request()
+			request.stream = true // You can set streaming differently for each request
+			request.query(`insert into Cliente(NomeEmp, CNPJ, Telefone, Endereco, Email, Chave) 
+			values
+				('${client.nome_emp}', '${client.cnpj}', '${client.telefone}', '${client.endereco}', '${client.email}', '${client.key}')`) // or request.execute(procedure)
+		 
+			request.on('error', err => {
+				res.send(err)
+			})
+			request.on('done', result => {
+				sql.close();
+				getLastClient(client, res);			
+			})
+			
+		})
+	}
+	getLastClient = (client, res) => {
+		sql.connect(config).then(() => {
+			return sql.query`Select Top 1 id from Cliente order by id desc`
+		}).then(result => {
+			sql.close();			
+			registerUser(res, result.recordset[0].id, client.user, client.pass, client.email);			
+		}).catch(err => {
+			console.log(err);
+			sql.close()
+			res.send('Falha ao estabelecer conexão com o banco');	
+		});
+	}
+	registerUser = (res, idClient, user, pass, email) =>{
+		sql.connect(config, err => {
+			// ... error checks
+		 
+			const request = new sql.Request()
+			request.stream = true // You can set streaming differently for each request
+			request.query(`insert into Usuario(Usuario, Senha, Email, Cliente_Id) 
+			values
+				('${user}', '${pass}', '${email}', ${idClient})`) // or request.execute(procedure)
+		 
+			request.on('error', err => {
+				res.send(err)
+			})
+			request.on('done', result => {
+				sql.close();
+				renderAuth(res, 'login', 'Login');			
+			})
+			
+		})
+	}
+	renderAuth = (res, route, title) => {
+		res.render(`autentication/${route}`, {n: title});
+	}
 }
