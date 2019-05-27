@@ -40,7 +40,7 @@ module.exports = function(application){
 			// ... error checks
 			const request = new sql.Request()
 			request.stream = true // You can set streaming differently for each request
-			request.query(`insert into Sensor(TempMax, TempMin, UmidMax, TempMin, Codigo, Cliente_id, Local) 
+			request.query(`insert into Sensor(TempMax, TempMin, UmidMax, UmidMin, Codigo, Cliente_id, Local) 
 			values
 				('${sensor.maxTemp}', '${sensor.maxTemp}', '${sensor.maxUmid}', '${sensor.minUmid}', '${code}', '${sensor.Cliente_Id}', '${sensor.Local}')`) // or request.execute(procedure)
 		 
@@ -52,7 +52,7 @@ module.exports = function(application){
 			})
 			request.on('done', result => {
 				sql.close();
-				res.redirect('/')			
+				res.redirect('/sensors')			
 			})
 			
 		})
