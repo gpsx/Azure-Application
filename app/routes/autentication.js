@@ -24,7 +24,7 @@ module.exports = function(application){
 			return sql.query`Select * from Usuario where Usuario = ${user.username} and Senha = ${user.pass}`
 		}).then(result => {
 			sql.close();						
-			autenticateLogin(res, result.recordset)
+			autenticateLogin(res, req, result.recordset)
 		}).catch(err => {
 			console.log(err);
 			sql.close()
@@ -43,12 +43,14 @@ module.exports = function(application){
 			res.redirect('/');
 		}
 	});
-	autenticateLogin = (res, result) =>{
+	autenticateLogin = (res, req, result) =>{
 		console.log(result);
 		if (result.length <= 0) {
 			res.redirect('/register');
 		}else{
 			req.session.user = result;
+			console.log(req.session.user);
+			
 			res.redirect('/');
 		}
 	}

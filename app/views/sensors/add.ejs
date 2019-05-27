@@ -45,27 +45,36 @@
 						<h4 class="box-title"><i class="fa fa-plus-circle ico"></i> Adicionar uma novo sensor</h4>
 						<!-- /.box-title -->
 						<!-- /.dropdown js__dropdown -->
-						<div class="card-content mar">
-							<div class="row">
-								<div class="col-md-12">											
-									<label for="local">Local</label>
-									<input type="local" class="form-control" id="local" placeholder="Local onde o sensor está instalado">
-									<!-- /.row -->
+						<form action="register" method="post">
+							<div class="card-content mar">
+								<div class="row">
+									<div class="col-md-12">											
+										<label for="local">Local</label>
+										<input type="local" required class="form-control" id="local" name="local" placeholder="Local onde o sensor está instalado" >
+										<!-- /.row -->
+									</div>
+									<div class="col-md-12 margin-top-10">
+										<p class="margin-top-20">Defina a temperatura minima e máxima do sensor: </p>
+										<div id="temp-slider"></div>
+										<input name='minTemp' id='minTemp' type="hidden" value="20">
+										<input name='maxTemp' id='maxTemp' type="hidden" value="30">
+									</div>
+									<div class="col-md-12 margin-top-10">
+										<p class="margin-top-20">Defina a umidade minima e máxima do sensor: </p>
+										<div id="umid-slider"></div>
+										<input name='minUmid' id='minUmid' type="hidden" value="50">
+										<input name='maxUmid' id='maxUmid' type="hidden" value="80">
+									</div>
+										<input name='Cliente_Id' type="hidden" value="<%= user.Cliente_Id%>">
+									 
+									<div class="col-md-12 margin-top-10">
+										<button type="submit" class="btn btn-icon btn-icon-left btn-success waves-effect waves-light btn-block"><i class="ico fa fa-check"></i>Adicionar</button>
+									</div>
+									
 								</div>
-								<div class="col-md-12 margin-top-10">
-									<p class="margin-top-20">Defina a temperatura minima e máxima do sensor: </p>
-									<div id="temp-slider"></div>
-								</div>
-								<div class="col-md-12 margin-top-10">
-									<p class="margin-top-20">Defina a umidade minima e máxima do sensor: </p>
-									<div id="umid-slider"></div>
-								</div>
-								<div class="col-md-12 margin-top-10">
-									<button type="button" class="btn btn-icon btn-icon-left btn-success waves-effect waves-light btn-block"><i class="ico fa fa-check"></i>Adicionar</button>
-								</div>
+								<!-- /.row -->
 							</div>
-							<!-- /.row -->
-						</div>
+						</form>
 						<!-- /.card-content -->
 					</div>
 					<!-- /.box-content card -->
@@ -107,5 +116,41 @@
 	<script src="../assets/scripts/ion.rangeSlider.init.min.js"></script>
 
 	<script src="../assets/scripts/main.min.js"></script>
+	<script>
+		var umid = document.getElementById('umid-slider');
+		var temp = document.getElementById('temp-slider');
+
+		umid.onchange = ()=>{	
+			u = umid.value.split(';');
+			maxUmid.value = u[1];
+			minUmid.value = u[0];			
+		}
+		temp.onchange = ()=>{
+			t = temp.value.split(';');
+			maxTemp.value = t[1];
+			minTemp.value = t[0];	
+		}
+        function send() {
+            console.log('EFETUANDO CADASTRO...');
+            
+            var data = new URLSearchParams(new FormData(newSensor));
+            fetch('/sensor/register', {
+                method: "POST",
+                body: data
+            }).then(function (response) {
+                console.log('OPA');
+                
+                if (response.ok) {     
+                    window.location.href = 'lala.html';
+                } else {
+        
+                    console.log('Erro de Cadastro!');
+                }
+            });
+        
+            return false;
+        }
+
+        </script>
 </body>
 </html>
