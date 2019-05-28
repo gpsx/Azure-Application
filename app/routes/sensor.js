@@ -13,12 +13,14 @@ module.exports = function(application){
 	var shar = "abcdefghijklmnopqrstuvwxyz1234567890";
 	var letters = shar.split('');
 	var code = '';
+	var sensors;
 	
-	application.get('/sensors', (req, res)=>{
-		res.render('sensors/showAll', {n : 'Todos os sensores'});
+	application.get('/sensors', async (req, res)=>{
+		searchSensors(req, res);
 	})
 
-	application.get('/sensors/add', (req, res)=>{
+	application.get('/sensors/add', async (req, res)=>{
+		
 		res.render('sensors/add', {n : 'Adicionar Novo Sensor', user: req.session.user[0]});
 	})
 	
@@ -42,7 +44,7 @@ module.exports = function(application){
 			request.stream = true // You can set streaming differently for each request
 			request.query(`insert into Sensor(TempMax, TempMin, UmidMax, UmidMin, Codigo, Cliente_id, Local) 
 			values
-				('${sensor.maxTemp}', '${sensor.maxTemp}', '${sensor.maxUmid}', '${sensor.minUmid}', '${code}', '${sensor.Cliente_Id}', '${sensor.Local}')`) // or request.execute(procedure)
+				('${sensor.maxTemp}', '${sensor.maxTemp}', '${sensor.maxUmid}', '${sensor.minUmid}', '${code}', '${sensor.Cliente_Id}', '${sensor.local}')`) // or request.execute(procedure)
 		 
 			request.on('error', err => {
 				sql.close();
@@ -57,5 +59,19 @@ module.exports = function(application){
 			
 		})
 	}
+	searchSensors = (req, res)=>{
+		sql.connect(config).then(() => {
+			return sql.query`Select * from Sensor join Alerta where Cliente_id = ${req.session.user[0].Cliente_Id}`
+		}).then(result => {
+			sql.close();						
+			res.render('sensors/showAll', {n : 'Todos os sensores', sensors: result.recordset});
+			
+		}).catch(err => {
+			console.log(err);
+			sql.close()
+			res.send('Falha ao estabelecer conexão com o banco');	
+		});
+	}
     
 }
+//Select s.Local,a.Temperatura from Sensor as s join Alerta as a on a.Sensor_Id = s.id;
