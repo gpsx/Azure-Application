@@ -21,7 +21,7 @@ module.exports = function(application){
 
 	application.get('/sensors/add', async (req, res)=>{
 		
-		res.render('sensors/add', {n : 'Adicionar Novo Sensor', user: req.session.user[0]});
+		res.render('sensors/add', {n : 'Sensores', user: req.session.user[0]});
 	})
 	
 	application.post('/sensors/register', (req, res)=>{
@@ -63,7 +63,7 @@ module.exports = function(application){
 	}
 	searchSensors = (req, res)=>{
 		sql.connect(config).then(() => {
-			return sql.query`Select s.Local,s.id, a.Temperatura from Sensor as s left join Alerta as a on a.Sensor_Id = s.id and Cliente_Id = ${req.session.user[0].Cliente_Id}`
+			return sql.query`Select s.Local, s.Codigo, s.id, a.Temperatura from Sensor as s left join Alerta as a on a.Sensor_Id = s.id and Cliente_Id = ${req.session.user[0].Cliente_Id}`
 		}).then(result => {
 			sql.close();									
 			assocTemp(req, res, result.recordset);
@@ -75,63 +75,38 @@ module.exports = function(application){
 		});
 	}
 	assocTemp = (req, res, sensors)=>{
-		s = [], temps = [{}];
-		console.log(sensors);
+		ss = [];
 		for (let i = 0; i < sensors.length; i++) {
-			s.push({id: sensors[i].id, l: sensors[i].Local});
-			if(s[i].id == s[s.length-1].id && s.length > 0){
-				console.log(s[i].id);	
-			}
-			s.pop();
-		}
-		for (let i = 0; i < sensors.length; i++) {
-			id = 0;
-            s.push({id: sensors[i].id, l: sensors[i].Local});
-            if(s[i].id == s[s.length - 1].id && s.length-1 != 0){
-                console.log(s[i].id);
-				id= 0;  
-            }else{
-				id++;
-			}
-		}
-		for (let i = 0; i < sensors.length; i++) {
-            if(s.length == 0){
-				s.push({id: sensors[i].id, l: sensors[i].Local});
-				console.log(s, i);
-				
-            }else if(s[i-1].id != sensors[i].id){
-				s.push({id: sensors[i].id, l: sensors[i].Local})
-			}
-        }
-		for (let i = 0; i < sensors.length; i++) {
-			s.push({id: sensors[i].id, l: sensors[i].Local})
-			if (s[i].id == sensors[i].id) {
-				s.pop()
+
+            if(ss.length == 0){
+
+				ss.push({
+					id: sensors[i].id, 
+					l: sensors[i].Local,
+					key: sensors[i].Codigo,
+					temps: []
+				});
+				console.log(ss, i);
+
+            }else if(ss[ss.length-1].id != sensors[i].id){
+
+				ss.push({
+					id: sensors[i].id, 
+					l: sensors[i].Local,
+					key: sensors[i].Codigo,
+					temps: []
+				})
 			}
 		}
-		for (const sensor of sensors) {
-			//s[Number(sensor.id)].temp.push(Number(sensor.Temperatura));
-			console.log(sensor);
-			
-		}
-		for (const sensor of sensors) {
-			s.push({id: sensor.id, l: sensor.Local});
-			//console.log(sensor);
-			
-		}
-		for (let i = 0; i < sensors.length; i++) {
-			a = 0;
-			for (let i = 0; i < sensors.length; i++) {
-				if (temps[a].l == sensors[i].Local) {
-					temp[a].push()
+		for (const s of ss) {
+			for (const sensor of sensors) {
+				if(s.id == sensor.id){
+					s.temps.push(sensor.Temperatura)
 				}
 			}
-			s.push({
-				id: sensors[i].id, 
-				l: sensor.Local
-			});
 		}
-		res.render('sensors/showAll', {n : 'Todos os sensores', sensors: result.recordset});
+		console.log(ss);
+		res.render('sensors/showAll', {n : 'Todos os sensores', sensors: ss});
 	}
     
 }

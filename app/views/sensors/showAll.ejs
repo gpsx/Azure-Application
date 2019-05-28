@@ -7,16 +7,16 @@
 <div id="wrapper">
 	<div class="main-content">
 		<div class="row small-spacing">
-			<% for(i=0;i < sensors.length;i++){ %>			
+			<% for (const sensor of sensors) { %>			
 				<div class="col-lg-4 col-xs-12">
 					<div class="box-content">
-						<h4 class="box-title text-info"><%= sensors[i].Local %></h4>
+						<h4 class="box-title"><%= sensor.l %></h4>
 						<!-- /.dropdown js__dropdown -->
 						<div class="content widget-stat">
-							<div id="traffic-sparkline-chart-2" class="left-content margin-top-15"></div>
+							<div id="<%= sensor.key %>" class="left-content margin-top-15"></div>
 							<!-- /#traffic-sparkline-chart-1 -->
 							<div class="right-content">
-								<h2 class="counter text-info"><%= sensors[i].Temperatura %>°C</h2>
+								<h2 class="counter text-info"><%= sensor.temps[sensor.temps.length-1] %>°C</h2>
 								<!-- /.counter -->
 								<p class="text text-info">Última temperatura</p>
 								<!-- /.text -->
@@ -66,5 +66,41 @@
 
 	<script src="assets/scripts/main.min.js"></script>
 	<script src="assets/scripts/showAll.js"></script>
+	<script>
+		(function($) {
+	"use strict";
+
+	var Chart = {};
+
+	$(document).ready(function(){
+		Chart.traffic();
+		Chart.bar();
+		Chart.pie();
+		return false;
+	});
+
+	$(window).on("resize",function(){
+		return false;
+	});
+
+	Chart = {
+		
+		traffic: function(){
+			<% for (const sensor of sensors) { %>
+				$("#<%= sensor.key%>").sparkline([<%= sensor.temps%>], {
+					width: "120",
+					height: "35",
+					lineColor: "#4d8cf4",
+					fillColor: !1,
+					spotColor: !1,
+					minSpotColor: !1,
+					maxSpotColor: !1,
+					lineWidth: 1.15
+				});
+			<% } %>
+		}
+	}
+})(jQuery);
+	</script>
 </body>
 </html>
