@@ -8,25 +8,25 @@
 	<div class="main-content">
 		<div class="row small-spacing">
 			<% for(i=0;i < sensors.length;i++){ %>			
-			<div class="col-lg-4 col-xs-12">
-				<div class="box-content">
-					<h4 class="box-title text-info"><%= sensors[i].Local %></h4>
-					<!-- /.dropdown js__dropdown -->
-					<div class="content widget-stat">
-						<div id="traffic-sparkline-chart-1" class="left-content margin-top-15"></div>
-						<!-- /#traffic-sparkline-chart-1 -->
-						<div class="right-content">
-							<h2 class="counter text-info"><%= sensors[i].TempMax %>°C</h2>
-							<!-- /.counter -->
-							<p class="text text-info">Última temperatura</p>
-							<!-- /.text -->
+				<div class="col-lg-4 col-xs-12">
+					<div class="box-content">
+						<h4 class="box-title text-info"><%= sensors[i].Local %></h4>
+						<!-- /.dropdown js__dropdown -->
+						<div class="content widget-stat">
+							<div id="traffic-sparkline-chart-2" class="left-content margin-top-15"></div>
+							<!-- /#traffic-sparkline-chart-1 -->
+							<div class="right-content">
+								<h2 class="counter text-info"><%= sensors[i].Temperatura %>°C</h2>
+								<!-- /.counter -->
+								<p class="text text-info">Última temperatura</p>
+								<!-- /.text -->
+							</div>
+							<!-- .right-content -->
 						</div>
-						<!-- .right-content -->
+						<!-- /.content widget-stat -->
 					</div>
-					<!-- /.content widget-stat -->
+					<!-- /.box-content -->
 				</div>
-				<!-- /.box-content -->
-			</div>
 			<% } %>
 			
 			
@@ -63,8 +63,8 @@
 	<script src="assets/plugin/waves/waves.min.js"></script>
 	<!-- Sparkline Chart -->
 	<script src="assets/plugin/chart/sparkline/jquery.sparkline.min.js"></script>
-	<script src="assets/scripts/chart.sparkline.init.min.js"></script>
 
 	<script src="assets/scripts/main.min.js"></script>
+	<script src="assets/scripts/showAll.js"></script>
 </body>
 </html>

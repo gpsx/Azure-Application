@@ -22,17 +22,7 @@
 
 	Chart = {
 		traffic: function(){
-			$("#traffic-sparkline-chart-1").sparkline("html", {
-				width: "120",
-				height: "35",
-				lineColor: "#4d8cf4",
-				fillColor: !1,
-				spotColor: !1,
-				minSpotColor: !1,
-				maxSpotColor: !1,
-				lineWidth: 1.15
-			});
-			$("#traffic-sparkline-chart-1").sparkline([0, 5, 3, 7, 5, 10, 3, 6, 5, 10], {
+			$("#traffic-sparkline-chart-1").sparkline([0, 5, 3, 7, 5, 10, 3, 6, 5, 10, 30], {
 				width: "120",
 				height: "35",
 				lineColor: "#4d8cf4",
@@ -56,34 +46,6 @@
 				height: '65',
 				resize: true,
 				lineColor:'#ff1744'
-			});
-		},
-		bar : function () {
-			$('#bar-sparkline-chart').sparkline([5, 6, 2, 8, 9, 4, 7, 10, 11, 12, 10, 9, 4, 7], {
-				type: 'bar',
-				height: '200',
-				barWidth: '10',
-				resize: true,
-				barSpacing: '7',
-				barColor: '#00aeff'
-			});
-			 $('#bar-sparkline-chart').sparkline([5, 6, 2, 8, 9, 4, 7, 10, 11, 12, 10, 9, 4, 7], {
-				type: 'line',
-				height: '200',
-				lineColor: '#00aeff',
-				fillColor: 'transparent',
-				composite: true,
-				highlightLineColor: 'rgba(0,0,0,.1)',
-				highlightSpotColor: 'rgba(0,0,0,.2)'
-			});
-		},
-		pie : function () {
-			$('#pie-sparkline-chart').sparkline([50, 70, 60], {
-				type: 'pie',
-				width: '200',
-				height: '200',
-				resize: true,
-				sliceColors: ['#fcb03b','#ea65a2','#566FC9']
 			});
 		}
 	}
