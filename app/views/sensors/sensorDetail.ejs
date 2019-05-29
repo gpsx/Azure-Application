@@ -27,7 +27,7 @@
 </head>
 
 <body>
-	
+
 <%- include('../includes/sidebar') -%>
 
 <%- include('../includes/navbar') -%>
@@ -40,18 +40,7 @@
 			<div class="box-content">
 				<h4 class="box-title">Temperatura</h4>
 				<!-- /.box-title -->
-				<div class="dropdown js__drop_down">
-					<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
-					<ul class="sub-menu">
-						<li><a href="#">Action</a></li>
-						<li><a href="#">Another action</a></li>
-						<li><a href="#">Something else there</a></li>
-						<li class="split"></li>
-						<li><a href="#">Separated link</a></li>
-					</ul>
-					<!-- /.sub-menu -->
-				</div>
-				<!-- /.dropdown js__dropdown -->
+
 				<canvas id="line-chartjs-chart" class="chartjs-chart" width="480" height="320"></canvas>
 				<!-- /#line-chartjs-chart.chartjs-chart -->
 			</div>
@@ -63,18 +52,7 @@
 			<div class="box-content">
 				<h4 class="box-title">Umidade</h4>
 				<!-- /.box-title -->
-				<div class="dropdown js__drop_down">
-					<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
-					<ul class="sub-menu">
-						<li><a href="#">Action</a></li>
-						<li><a href="#">Another action</a></li>
-						<li><a href="#">Something else there</a></li>
-						<li class="split"></li>
-						<li><a href="#">Separated link</a></li>
-					</ul>
-					<!-- /.sub-menu -->
-				</div>
-				<!-- /.dropdown js__dropdown -->
+
 				<canvas id="area-chartjs-chart" class="chartjs-chart" width="480" height="320"></canvas>
 				<!-- /#area-chartjs-chart.chartjs-chart -->
 			</div>
@@ -613,7 +591,6 @@
 
 	<!-- chart.js Chart -->
 	<script src="../../assets/plugin/chart/chartjs/Chart.bundle.min.js"></script>
-	<script src="../../assets/scripts/jquery.chartjs.init.js"></script>
 
 	<!-- Data Tables -->
 	<script src="../../assets/plugin/datatables/media/js/jquery.dataTables.min.js"></script>
@@ -623,5 +600,61 @@
 	<script src="../../assets/scripts/datatables.demo.min.js"></script>
 
 	<script src="../../assets/scripts/main.min.js"></script>
+	<script>
+		(function($) {
+		"use strict";
+
+		var ChartJs = {},
+		randomScalingFactor = function() {
+			return Math.round(Math.random() * 15) + 5;
+		};
+
+		$(document).ready(function(){
+			ChartJs.line('line-chartjs-chart',true);
+			ChartJs.line('area-chartjs-chart',true);
+			return false;
+		});
+
+		ChartJs = {
+			line: function(container,fill, l, d, bColor){
+				var lineData = {
+						labels: ["0", "1", "2", "3","4","5","6","7","8","9","10"],
+						datasets: [{
+							label: 'Series 1',
+							fill: fill,
+							borderColor: "rgba(245,112,122,1)",
+							pointBackgroundColor: "rgb(245,112,122)",
+							backgroundColor: "rgba(245,112,122,0.3)",
+							data: [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(),randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()]
+						}]
+					};
+				var ctx = document.getElementById(container).getContext("2d");
+				new Chart(ctx, {
+					type: 'line',
+					data: lineData,
+					options: {
+						hover: {
+							mode: 'label'
+						},
+						responsive: true,
+						scales: {
+							xAxes: [{
+								ticks: {
+									beginAtZero:true
+								}
+							}],
+							yAxes: [{
+								ticks: {
+									beginAtZero:true
+								}
+							}]
+						}
+					}
+				});
+				return false;
+			}
+		}	
+	})(jQuery);
+	</script>
 </body>
 </html>

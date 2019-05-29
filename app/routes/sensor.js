@@ -28,9 +28,7 @@ module.exports = function(application){
 	})
 	application.get('/sensors/detail/:id', function (req, res, next) {
 		console.log('ID:', req.params.id);
-		next();
-	  }, function (req, res, next) {
-		res.render('sensors/sensorDetail', {n : 'Sensores'});
+		searchSensor(req, res, req.params.id);
 	  });
 
 	randomChar = (limit, l)=>{
@@ -118,6 +116,62 @@ module.exports = function(application){
 		console.log(ss);
 		res.render('sensors/showAll', {n : 'Todos os sensores', sensors: ss});
 	}
+	searchSensor = (req, res, key)=>{
+		sql.connect(config).then(() => {
+			return sql.query`Select s.*, a.Temperatura , a.Umidade, a.dataHora from Sensor as s join Alerta as a on a.Sensor_Id = s.id and Codigo = ${key}`
+		}).then(result => {
+			sql.close();
+			console.log(result.recordset);
+												
+			assocSensorDetail(req, res, result.recordset);
+			
+		}).catch(err => {
+			console.log(err);
+			sql.close()
+			res.send('Falha ao estabelecer conexão com o banco');	
+		});
+	}
+
+	assocSensorDetail = (req, res, sensors)=>{
+		th = [];
+		for (let i = 0; i < sensors.length; i++) {
+				th.push({
+					id: sensors[i].id, 
+					l: sensors[i].Local,
+					key: sensors[i].Codigo,
+					temps: [],
+					umis : [],
+					dataHora : [],
+					TopT : [],
+					TopU : [],
+					topDataHora : []
+				});
+				console.log(th, i);
+				break;
+		}
+		for (const s of th) {
+			for (const sensor of sensors) {
+				if(s.id == sensor.Id[0]){
+					s.temps.push(sensor.Temperatura);
+					s.umis.push(sensor.Umidade);
+					s.TopT.push(sensor.Temperatura);
+					s.TopU.push(sensor.Umidade);					
+					s.dataHora.push(sensor.dataHora);	
+					s.topDataHora.push(sensor.dataHora);				  
+				}
+			}
+		}
+		for (const s of th) {
+			while (s.TopT.length > 10) {
+				s.TopT.shift();
+				s.TopU.shift();
+				s.topDataHora.shift();
+			}
+		}
+		console.log(th);
+		res.render('sensors/sensorDetail', {n : `Sensor - ${th.l}`, s: th});
+		
+	};
     
 }
 //Select s.Local,a.Temperatura from Sensor as s join Alerta as a on a.Sensor_Id = s.id;
