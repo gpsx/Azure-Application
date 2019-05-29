@@ -19,14 +19,19 @@ module.exports = function(application){
 		searchSensors(req, res);
 	})
 
-	application.get('/sensors/add', async (req, res)=>{
-		
+	application.get('/sensors/add', async (req, res)=>{		
 		res.render('sensors/add', {n : 'Sensores', user: req.session.user[0]});
 	})
 	
 	application.post('/sensors/register', (req, res)=>{
-			addSensor(req.body, req, res);			
+		addSensor(req.body, req, res);			
 	})
+	application.get('/sensors/detail/:id', function (req, res, next) {
+		console.log('ID:', req.params.id);
+		next();
+	  }, function (req, res, next) {
+		res.render('sensors/sensorDetail', {n : 'Sensores'});
+	  });
 
 	randomChar = (limit, l)=>{
 		c = '';
@@ -101,8 +106,13 @@ module.exports = function(application){
 		for (const s of ss) {
 			for (const sensor of sensors) {
 				if(s.id == sensor.id){
-					s.temps.push(sensor.Temperatura)
+					s.temps.push(sensor.Temperatura); 
 				}
+			}
+		}
+		for (const s of ss) {
+			while (s.temps.length > 10) {
+				s.temps.shift();
 			}
 		}
 		console.log(ss);
