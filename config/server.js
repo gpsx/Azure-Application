@@ -19,6 +19,10 @@ var app = express();
 //Recupera o modulo so socket.io e atrela o socket.io ao nosso servidor express.
 var io = require('socket.io');
 
+var config = require('./db')
+var sql = require('mssql')
+
+
 var users = [];
 
 /* setar as variáveis 'view engine' e 'views' do express */
@@ -40,7 +44,7 @@ app.use(expressValidator());
 app.use(expressSession({
 	secret: 'ardIno',
 	resave: false,
-	saveUninitialized: false
+	saveUninitialized: true
 }));
 
 /* efetua o autoload das rotas, dos models e dos controllers para o objeto app */
@@ -56,19 +60,37 @@ var server = app.listen(8080, function(){
 })
 
 var s = io(server);
-
+seekLastTempHumi = (key)=>{
+	return new Promise((resolve,reject)=>{
+		console.log(key);
+		sql.connect(config, err => {
+			// ... error checks
+		 
+			// Query
+			new sql.Request().query(`Select top 1 a.Temperatura, a.Umidade from  Alerta as a , Sensor as s where a.Sensor_Id = s.id and Codigo ='${key}' order by a.id desc`, (err, result) => {
+				// ... error checks
+				sql.close();
+				!err ? resolve(result.recordset[0]) : console.log(err)	 
+			})
+		 
+		})
+		 
+		sql.on('error', err => {
+			// ... error handler
+		})
+	})
+	
+}
 s.on('connection', (socket) => {//É mostrado quando alguem se conecta 
-	var user = {
-		Name : "Porra",
-		Pass : "123"
-	}
-	socket.userbd = user;
 
-	socket.emit('redirect', (data)=>{
-		data = {
-			user : "pass",
-			pass : "sad	"
-		}
+	socket.on('requestLastTH', (key)=>{	
+		seekLastTempHumi(key)
+		.then((th)=>{
+			s.to(socket.id).emit('LastTempHumi',th);
+		});
+			
+		
+		//s.socket(socket.id).emit('LastTempHumi',th);
 	})
 	
 })

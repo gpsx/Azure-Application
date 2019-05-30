@@ -7,7 +7,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	<title>Blank Page - SpaceX Template</title>
+	<title><%= n %></title>
 
 	<!-- Main Styles -->
 	<link rel="stylesheet" href="../../assets/styles/style.min.css">
@@ -590,7 +590,8 @@
 	<script src="../../assets/scripts/chart.sparkline.init.min.js"></script>
 
 	<!-- chart.js Chart -->
-	<script src="../../assets/plugin/chart/chartjs/Chart.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
 
 	<!-- Data Tables -->
 	<script src="../../assets/plugin/datatables/media/js/jquery.dataTables.min.js"></script>
@@ -601,60 +602,176 @@
 
 	<script src="../../assets/scripts/main.min.js"></script>
 	<script>
-		(function($) {
-		"use strict";
+		
+	// 	(function($) {
+	// 	// "use strict";
 
-		var ChartJs = {},
-		randomScalingFactor = function() {
-			return Math.round(Math.random() * 15) + 5;
-		};
+	// 	var ChartJs = {};
 
-		$(document).ready(function(){
-			ChartJs.line('temp',true, [<%= sensor.TopT %>], [<%= sensor.TopT%>], 'Temperatura');
-			ChartJs.line('Humid',true, [<%= sensor.TopT%>], [<%= sensor.TopU%>], 'Umidade');
-			return false;
-		});
+	// 	$(document).ready(function(){
+	// 		ChartJs.line('temp',true, [<%= sensor.TopT %>], [<%= sensor.TopT%>], 'Temperatura', 'rgb(235, 40, 40)', 'rgb(235, 40, 40, .3)', '°C');
+	// 		ChartJs.line('Humid',true, [<%= sensor.TopT%>], [<%= sensor.TopU%>], 'Umidade', 'rgb(40, 92, 235)', 'rgb(40, 92, 235, .3)', '%');
+	// 		return false;
+	// 	});
 
-		ChartJs = {
-			line: function(container,fill, l, d, t){
-				var lineData = {
-						labels: l,
-						datasets: [{
-							label: t,
-							fill: fill,
-							borderColor: "rgba(245,112,122,1)",
-							pointBackgroundColor: "rgb(245,112,122)",
-							backgroundColor: "rgba(245,112,122,0.3)",
-							data: d
-						}]
-					};
-				var ctx = document.getElementById(container).getContext("2d");
-				new Chart(ctx, {
-					type: 'line',
-					data: lineData,
-					options: {
-						hover: {
-							mode: 'label'
-						},
-						responsive: true,
-						scales: {
-							xAxes: [{
-								ticks: {
-									beginAtZero:true
-								}
-							}],
-							yAxes: [{
-								ticks: {
-									beginAtZero:true
-								}
-							}]
+	// 	ChartJs = {
+	// 		line: function(container,fill, l, d, t, c1, c2, type){
+	// 			var lineData = {
+	// 					labels: l,
+	// 					datasets: [{
+	// 						label: t,
+	// 						fill: fill,
+	// 						borderColor: c1,
+	// 						pointBackgroundColor: c1,
+	// 						backgroundColor: c2,
+	// 						data: d
+	// 					}]
+	// 				};
+	// 			var ctx = document.getElementById(container).getContext("2d");
+	// 			new Chart(ctx, {
+	// 				type: 'line',
+	// 				data: lineData,
+	// 				options: {
+	// 					hover: {
+	// 						mode: 'label'
+	// 					},
+	// 					responsive: true,
+	// 					scales: {
+	// 						xAxes: [{
+	// 							ticks: {
+	// 								beginAtZero:true
+	// 							}
+	// 						}],
+	// 						yAxes: [{
+	// 							ticks: {
+	// 								beginAtZero:true,
+	// 								 callback: function(value) {
+	// 									return value + type;
+	// 								}
+	// 							}
+	// 						}]
+	// 					}
+	// 				}
+	// 			});
+	// 			return false;
+	// 		}
+	// 	}	
+	// })(jQuery);
+	var socket = io.connect('localhost:8080'); //Se conecta ao servidor
+
+	var temper = document.getElementById('temp').getContext('2d');
+	var t1 = new Chart(temper, {
+		// O tipo de gráfico que será criado
+		type: 'line',
+		// As configurações do gráfico
+		data: {
+		labels: [<%= sensor.TopT%>],
+		datasets: [{
+			label: "Temperatura",
+			borderColor: "rgb(235, 40, 40)",
+			data: [<%= sensor.TopT%>],
+			fill: true,
+			pointStyle: 'circle',
+			backgroundColor: 'rgb(235, 40, 40, .3)',
+			pointRadius: 5,
+			pointHoverRadius: 7,
+			lineTension: 0,
+		}]
+		},
+		// Aqui será Configurado o título do gráfico e deixá-lo responsivo
+		options: {
+			responsive: true,
+			hoverMode: 'index',
+			stacked: false,
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true,
+						// Inclui a °C para o gráfico de Temperatura
+						callback: function(value) {
+							return value + '°C';
 						}
 					}
-				});
-				return false;
+				}]
 			}
-		}	
-	})(jQuery);
+		}
+		
+	});
+
+	var umid = document.getElementById('Humid').getContext('2d');
+	var u1 = new Chart(umid, {
+		// O tipo de gráfico que será criado
+		type: 'line',
+		// As configurações do gráfico
+		data: {
+		labels: [<%= sensor.TopT%>],
+		datasets: [{
+			label: "Umidade",
+			borderColor: "rgb(40, 92, 235)",
+			data: [<%= sensor.TopU%>],
+			fill: true,
+			pointStyle: 'circle',
+			backgroundColor: 'rgb(40, 92, 235, .3)',
+			pointRadius: 5,
+			pointHoverRadius: 7,
+			lineTension: 0,
+		}]
+		},
+		// Aqui será Configurado o título do gráfico e deixá-lo responsivo
+		options: {
+				responsive: true,
+				hoverMode: 'index',
+				stacked: false,
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero: true,
+							// Inclui a porcentagem para o gráfico de umidade
+							callback: function(value) {
+								return value + '%';
+							}
+						}
+					}]
+				}
+		}
+		
+	});
+
+	var socket = io.connect('localhost:8080'); //Se conecta ao servidor
+
+	setInterval(()=>{
+		console.log("PAM");
+		
+		socket.emit('requestLastTH', '<%= sensor.key%>');
+	}, 15000);
+	
+	socket.on('LastTempHumi', (th)=>{
+		console.log(th);
+		t = th.Temperatura, h = th.Umidade
+		updateChart(u1, h);
+		updateChart(t1, t);
+		
+	})
+	//Para evitar a repetição de código
+    function updateChart(id, data) {
+        if(id.data.labels.length <=  15) { //Se houver menos de 15 dados
+			id.data.labels.push(20);  //Coloca o horário no eixo X
+			console.log(data);
+			
+            id.data.datasets.forEach((dataset) => {
+                dataset.data.push(data); //Adiciona a temperatura no eixo Y
+            });
+        }
+        else {
+            id.data.labels.shift(); //Remove o primeiro registro de horário
+            id.data.labels.push(20); //Insere a data atual
+            id.data.datasets.forEach((dataset) => {
+                dataset.data.shift(); //Remove o primeiro registro de tempertura
+                dataset.data.push(data); //Insere um novo registro de temperatura
+            });
+        }
+        id.update(); //Atualiza o gráfico
+	}
 	</script>
 </body>
 </html>

@@ -10,7 +10,7 @@ html, body{
 }
 body{
 	font-family: var(--default-font);
-	background: #444;
+	background: rgb(40, 92, 235);
 	perspective: 2500px;
 }
 
