@@ -134,9 +134,11 @@ module.exports = function(application){
 
 	assocSensorDetail = (req, res, sensors)=>{
 		th = [];
+		console.log(sensors);
+		
 		for (let i = 0; i < sensors.length; i++) {
 				th.push({
-					id: sensors[i].id, 
+					id: sensors[i].Id, 
 					l: sensors[i].Local,
 					key: sensors[i].Codigo,
 					temps: [],
@@ -151,7 +153,7 @@ module.exports = function(application){
 		}
 		for (const s of th) {
 			for (const sensor of sensors) {
-				if(s.id == sensor.Id[0]){
+				if(s.id == sensor.Id){
 					s.temps.push(sensor.Temperatura);
 					s.umis.push(sensor.Umidade);
 					s.TopT.push(sensor.Temperatura);
@@ -169,7 +171,7 @@ module.exports = function(application){
 			}
 		}
 		console.log(th);
-		res.render('sensors/sensorDetail', {n : `Sensor - ${th.l}`, s: th});
+		res.render('sensors/sensorDetail', {n : `Sensor - ${th[0].l}`, sensor: th[0]});
 		
 	};
     

@@ -41,7 +41,7 @@
 				<h4 class="box-title">Temperatura</h4>
 				<!-- /.box-title -->
 
-				<canvas id="line-chartjs-chart" class="chartjs-chart" width="480" height="320"></canvas>
+				<canvas id="temp" class="chartjs-chart" width="480" height="320"></canvas>
 				<!-- /#line-chartjs-chart.chartjs-chart -->
 			</div>
 			<!-- /.box-content -->
@@ -53,7 +53,7 @@
 				<h4 class="box-title">Umidade</h4>
 				<!-- /.box-title -->
 
-				<canvas id="area-chartjs-chart" class="chartjs-chart" width="480" height="320"></canvas>
+				<canvas id="Humid" class="chartjs-chart" width="480" height="320"></canvas>
 				<!-- /#area-chartjs-chart.chartjs-chart -->
 			</div>
 			<!-- /.box-content -->
@@ -610,22 +610,22 @@
 		};
 
 		$(document).ready(function(){
-			ChartJs.line('line-chartjs-chart',true);
-			ChartJs.line('area-chartjs-chart',true);
+			ChartJs.line('temp',true, [<%= sensor.TopT %>], [<%= sensor.TopT%>], 'Temperatura');
+			ChartJs.line('Humid',true, [<%= sensor.TopT%>], [<%= sensor.TopU%>], 'Umidade');
 			return false;
 		});
 
 		ChartJs = {
-			line: function(container,fill, l, d, bColor){
+			line: function(container,fill, l, d, t){
 				var lineData = {
-						labels: ["0", "1", "2", "3","4","5","6","7","8","9","10"],
+						labels: l,
 						datasets: [{
-							label: 'Series 1',
+							label: t,
 							fill: fill,
 							borderColor: "rgba(245,112,122,1)",
 							pointBackgroundColor: "rgb(245,112,122)",
 							backgroundColor: "rgba(245,112,122,0.3)",
-							data: [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(),randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()]
+							data: d
 						}]
 					};
 				var ctx = document.getElementById(container).getContext("2d");
