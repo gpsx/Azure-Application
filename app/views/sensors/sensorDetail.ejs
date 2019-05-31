@@ -35,7 +35,38 @@
 
 <div class="main-content">
 	<div class="row small-spacing">
-
+		<div class="col-lg-12 col-md-12">
+			<div class="box-content card">
+				<h4 class="box-title"><i class="fa fa-pencil ico"></i>Informações do sensor</h4>
+				<!-- /.dropdown js__dropdown -->
+				<div class="card-content mar">
+					<div class="row">
+						<div class="col-md-12">											
+							<h3>Local do sensor:</h3>
+							<p><%= sensor.l%></P>
+							<!-- /.row -->
+						</div>
+						<div class="col-md-12">											
+							<h3>Temperatura Máxima/Mínima:</h3>
+							<p><%= sensor.tMin%>°C/<%= sensor.tMax%>°C</P>
+							<!-- /.row -->
+						</div>
+						<div class="col-md-12">											
+							<h3>Umidade Máxima/Mínima:</h3>
+							<p><%= sensor.hMin%>%/<%= sensor.hMax%>%</P>
+							<!-- /.row -->
+						</div>
+						<div class="col-md-12">											
+							<h3>Código do sensor:</h3>
+							<p><%= sensor.key%></P>
+							<!-- /.row -->
+						</div>
+					</div>
+					<!-- /.row -->
+				</div>
+				<!-- /.card-content -->
+			</div>
+		</div>
 		<div class="col-lg-6 col-md-12">
 			<div class="box-content">
 				<h4 class="box-title">Temperatura</h4>
@@ -47,7 +78,6 @@
 			<!-- /.box-content -->
 		</div>
 		<!-- /.col-lg-6 col-md-12 -->
-
 		<div class="col-lg-6 col-md-12">
 			<div class="box-content">
 				<h4 class="box-title">Umidade</h4>
@@ -602,61 +632,7 @@
 
 	<script src="../../assets/scripts/main.min.js"></script>
 	<script>
-		
-	// 	(function($) {
-	// 	// "use strict";
-
-	// 	var ChartJs = {};
-
-	// 	$(document).ready(function(){
-	// 		ChartJs.line('temp',true, [<%= sensor.TopT %>], [<%= sensor.TopT%>], 'Temperatura', 'rgb(235, 40, 40)', 'rgb(235, 40, 40, .3)', '°C');
-	// 		ChartJs.line('Humid',true, [<%= sensor.TopT%>], [<%= sensor.TopU%>], 'Umidade', 'rgb(40, 92, 235)', 'rgb(40, 92, 235, .3)', '%');
-	// 		return false;
-	// 	});
-
-	// 	ChartJs = {
-	// 		line: function(container,fill, l, d, t, c1, c2, type){
-	// 			var lineData = {
-	// 					labels: l,
-	// 					datasets: [{
-	// 						label: t,
-	// 						fill: fill,
-	// 						borderColor: c1,
-	// 						pointBackgroundColor: c1,
-	// 						backgroundColor: c2,
-	// 						data: d
-	// 					}]
-	// 				};
-	// 			var ctx = document.getElementById(container).getContext("2d");
-	// 			new Chart(ctx, {
-	// 				type: 'line',
-	// 				data: lineData,
-	// 				options: {
-	// 					hover: {
-	// 						mode: 'label'
-	// 					},
-	// 					responsive: true,
-	// 					scales: {
-	// 						xAxes: [{
-	// 							ticks: {
-	// 								beginAtZero:true
-	// 							}
-	// 						}],
-	// 						yAxes: [{
-	// 							ticks: {
-	// 								beginAtZero:true,
-	// 								 callback: function(value) {
-	// 									return value + type;
-	// 								}
-	// 							}
-	// 						}]
-	// 					}
-	// 				}
-	// 			});
-	// 			return false;
-	// 		}
-	// 	}	
-	// })(jQuery);
+	console.log('<%= sensor.tMax %>')
 	var socket = io.connect('localhost:8080'); //Se conecta ao servidor
 
 	var temper = document.getElementById('temp').getContext('2d');

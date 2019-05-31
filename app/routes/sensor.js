@@ -4,7 +4,7 @@ var sql = require('mssql')
 module.exports = function(application){
 
 	// application.use(function(req,res,next){
-	// 	if(['/login'].indexOf(req.url) === -1 && !req.session.user){	  
+	// 	if(['/login'].indexOf(req.url) === -1 && ['/register'].indexOf(req.url) === -1 && !req.session.user){	  
 	// 	  res.redirect('/login');
 	// 	}else{
 	// 	  next();
@@ -47,7 +47,7 @@ module.exports = function(application){
 			request.stream = true // You can set streaming differently for each request
 			request.query(`insert into Sensor(TempMax, TempMin, UmidMax, UmidMin, Codigo, Cliente_id, Local) 
 			values
-				('${sensor.maxTemp}', '${sensor.maxTemp}', '${sensor.maxUmid}', '${sensor.minUmid}', '${code}', '${sensor.Cliente_Id}', '${sensor.local}')`) // or request.execute(procedure)
+				('${sensor.maxTemp}', '${sensor.minTemp}', '${sensor.maxUmid}', '${sensor.minUmid}', '${code}', '${sensor.Cliente_Id}', '${sensor.local}')`) // or request.execute(procedure)
 		 
 			request.on('error', err => {
 				sql.close();
@@ -66,7 +66,7 @@ module.exports = function(application){
 	}
 	searchSensors = (req, res)=>{
 		sql.connect(config).then(() => {
-			return sql.query`Select s.Local, s.Codigo, s.id, a.Temperatura from Sensor as s left join Alerta as a on a.Sensor_Id = s.id and Cliente_Id = ${req.session.user[0].Cliente_Id}`
+			return sql.query`Select s.Local, s.Codigo, s.id, a.Temperatura from Sensor as s left join Historico as a on a.Sensor_Id = s.id and Cliente_Id = ${req.session.user[0].Cliente_Id}`
 		}).then(result => {
 			sql.close();									
 			assocTemp(req, res, result.recordset);
@@ -118,7 +118,7 @@ module.exports = function(application){
 	}
 	searchSensor = (req, res, key)=>{
 		sql.connect(config).then(() => {
-			return sql.query`Select s.*, a.Temperatura , a.Umidade, a.dataHora from Sensor as s join Alerta as a on a.Sensor_Id = s.id and Codigo = ${key}`
+			return sql.query`Select s.*, h.Temperatura , h.Umidade, h.DataDMA, h.Hora from Sensor as s join Historico as h on h.Sensor_Id = s.id and Codigo = ${key}`
 		}).then(result => {
 			sql.close();
 			console.log(result.recordset);
@@ -141,12 +141,17 @@ module.exports = function(application){
 					id: sensors[i].Id, 
 					l: sensors[i].Local,
 					key: sensors[i].Codigo,
+					tMax: sensors[i].TempMax,
+					tMin: sensors[i].TempMin,
+					hMax: sensors[i].UmidMax,
+					hMin: sensors[i].UmidMin,
 					temps: [],
 					umis : [],
-					dataHora : [],
+					dataDMA:[],
+					Hora : [],
 					TopT : [],
 					TopU : [],
-					topDataHora : []
+					topHora : []
 				});
 				console.log(th, i);
 				break;
@@ -158,8 +163,9 @@ module.exports = function(application){
 					s.umis.push(sensor.Umidade);
 					s.TopT.push(sensor.Temperatura);
 					s.TopU.push(sensor.Umidade);					
-					s.dataHora.push(sensor.dataHora);	
-					s.topDataHora.push(sensor.dataHora);				  
+					s.dataDMA.push(sensor.DataDMA);
+					s.Hora.push(sensor.Hora);	
+					s.topHora.push(sensor.Hora);				  
 				}
 			}
 		}
@@ -171,7 +177,7 @@ module.exports = function(application){
 			}
 		}
 		console.log(th);
-		res.render('sensors/sensorDetail', {n : `Sensor - ${th[0].l}`, sensor: th[0]});
+		res.render('sensors/sensorDetail', {n : `Sensor - ${th[0].l}`, sensor: th[0], bigData: sensors});
 		
 	};
     
