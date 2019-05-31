@@ -153,7 +153,6 @@ module.exports = function(application){
 					TopU : [],
 					topHora : []
 				});
-				console.log(th, i);
 				break;
 		}
 		for (const s of th) {
@@ -173,7 +172,7 @@ module.exports = function(application){
 			while (s.TopT.length > 10) {
 				s.TopT.shift();
 				s.TopU.shift();
-				s.topDataHora.shift();
+				s.topHora.shift();
 			}
 		}
 		console.log(th);

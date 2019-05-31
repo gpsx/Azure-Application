@@ -67,7 +67,7 @@ seekLastTempHumi = (key)=>{
 			// ... error checks
 		 
 			// Query
-			new sql.Request().query(`Select top 1 a.Temperatura, a.Umidade from  Alerta as a , Sensor as s where a.Sensor_Id = s.id and Codigo ='${key}' order by a.id desc`, (err, result) => {
+			new sql.Request().query(`Select top 1 a.Temperatura, a.Umidade, a.Hora from  Historico as a , Sensor as s where a.Sensor_Id = s.id and Codigo ='${key}' order by a.id desc`, (err, result) => {
 				// ... error checks
 				sql.close();
 				!err ? resolve(result.recordset[0]) : console.log(err)	 
