@@ -13,8 +13,8 @@
 				<div class="box-content bordered primary margin-bottom-20">
 					<div class="profile-avatar">
 						<img src="http://placehold.it/450x450" alt="">
-						<h3><strong>Nome</strong></h3>
-						<h4>Trabalha na empresa xxxxxx</h4>
+						<h3><strong><%= user.Nome%></strong></h3>
+						<h4>Trabalha na empresa <%= user.NomeEmp%></h4>
 					</div>
 				</div>
 				<!-- /.box-content bordered -->
@@ -80,29 +80,31 @@
 							<h4 class="box-title"><i class="fa fa-plus-circle ico"></i> Adicionar uma novo usuário</h4>
 							<!-- /.box-title -->
 							<!-- /.dropdown js__dropdown -->
-							<div class="card-content mar">
-								<div class="row">
-									<div class="col-md-12">											
-										<label for="email">Email</label>
-										<input type="email" class="form-control" id="email" placeholder="Enter your email">
-										<!-- /.row -->
+							<form action="/add" method="post">
+								<div class="card-content mar">
+									<div class="row">
+										<div class="col-md-12">											
+											<label for="email">nome</label>
+											<input type="email" class="form-control" name="name" placeholder="Nome do usuário">
+											<!-- /.row -->
+										</div>
+										<div class="col-md-6">											
+											<label for="email">Usuário</label>
+											<input type="email" class="form-control" name="user" placeholder="Usuário...">
+											<!-- /.row -->
+										</div>
+										<div class="col-md-6">											
+											<label for="email">Senha</label>
+											<input type="email" class="form-control" name="pass" placeholder="Senha...">
+											<!-- /.row -->
+										</div>
+										<div class="col-md-12 margin-top-10">
+											<button type="button" class="btn btn-icon btn-icon-left btn-success waves-effect waves-light btn-block"><i class="ico fa fa-check"></i>Adicionar</button>
+										</div>
 									</div>
-									<div class="col-md-6">											
-										<label for="email">Usuário</label>
-										<input type="email" class="form-control" id="email" placeholder="Enter your email">
-										<!-- /.row -->
-									</div>
-									<div class="col-md-6">											
-										<label for="email">Senha</label>
-										<input type="email" class="form-control" id="email" placeholder="Enter your email">
-										<!-- /.row -->
-									</div>
-									<div class="col-md-12 margin-top-10">
-										<button type="button" class="btn btn-icon btn-icon-left btn-success waves-effect waves-light btn-block"><i class="ico fa fa-check"></i>Adicionar</button>
-									</div>
+									<!-- /.row -->
 								</div>
-								<!-- /.row -->
-							</div>
+							</form>
 							<!-- /.card-content -->
 						</div>
 						<!-- /.box-content card -->

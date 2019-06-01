@@ -21,7 +21,7 @@ module.exports = function(application){
 		var user = req.body;
 		console.log(user);
 		sql.connect(config).then(() => {
-			return sql.query`Select * from Usuario where Usuario = ${user.username} and Senha = ${user.pass}`
+			return sql.query`Select u.*, c.NomeEmp from Usuario as u, Cliente as c where Usuario = ${user.username} and Senha = ${user.pass} and c.id = u.Cliente_Id`
 		}).then(result => {
 			sql.close();						
 			autenticateLogin(res, req, result.recordset)
@@ -123,9 +123,9 @@ module.exports = function(application){
 		 
 			const request = new sql.Request()
 			request.stream = true // You can set streaming differently for each request
-			request.query(`insert into Usuario(Usuario, Senha, Email, Cliente_Id) 
+			request.query(`insert into Usuario(Usuario, Senha, Email, Cliente_Id, Nome, Nivel) 
 			values
-				('${user}', '${pass}', '${email}', ${idClient})`) // or request.execute(procedure)
+				('${user}', '${pass}', '${email}', ${idClient}, 'admin', 'admin')`) // or request.execute(procedure)
 		 
 			request.on('error', err => {
 				res.send(err)
