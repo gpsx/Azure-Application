@@ -7,28 +7,48 @@
 <div id="wrapper">
 	<div class="main-content">
 		<div class="row small-spacing">
-			<% for (const sensor of sensors) { %>			
-				<a href="../sensors/detail/<%= sensor.key %>">
-					<div class="col-lg-4 col-xs-12">
-						<div class="box-content">
-							<h4 class="box-title"><%= sensor.l %></h4>
-							<!-- /.dropdown js__dropdown -->
-							<div class="content widget-stat">
-								<div id="<%= sensor.key %>" class="left-content margin-top-15"></div>
-								<!-- /#traffic-sparkline-chart-1 -->
-								<div class="right-content">
-									<h2 class="counter text-info"><%= sensor.temps[sensor.temps.length-1] %>°C</h2>
-									<!-- /.counter -->
-									<p class="text text-info">Última temperatura</p>
-									<!-- /.text -->
+			<% for (const sensor of sensors) { 
+					if(sensor.temps != ''){ %>
+						<a href="../sensors/detail/<%= sensor.key %>">
+							<div class="col-lg-4 col-xs-12">
+								<div class="box-content">
+									<h4 class="box-title"><%= sensor.l %></h4>
+									<!-- /.dropdown js__dropdown -->
+									<div class="content widget-stat">
+										<div id="<%= sensor.key %>" class="left-content margin-top-15"></div>
+										<!-- /#traffic-sparkline-chart-1 -->
+										<div class="right-content">
+											<h2 class="counter text-info"><%= sensor.temps[sensor.temps.length-1] %>°C</h2>
+											<!-- /.counter -->
+											<p class="text text-info">Última temperatura</p>
+											<!-- /.text -->
+										</div>
+										<!-- .right-content -->
+									</div>
+									<!-- /.content widget-stat -->
 								</div>
-								<!-- .right-content -->
+								<!-- /.box-content -->
 							</div>
-							<!-- /.content widget-stat -->
+						</a>
+				<% } else { %>
+						<div class="col-lg-4 col-xs-12">
+							<div class="box-content">
+								<h4 class="box-title"><%= sensor.l %></h4>
+								<!-- /.dropdown js__dropdown -->
+								<div class="content widget-stat">
+									<div class="center-content">
+										<h2 class="text-inverse"><%= sensor.key %></h2>
+										<!-- /.counter -->
+										<p class="text text-info">Código do Sensor</p>
+										<!-- /.text -->
+									</div>
+									<!-- .right-content -->
+								</div>
+								<!-- /.content widget-stat -->
+							</div>
+							<!-- /.box-content -->
 						</div>
-						<!-- /.box-content -->
-					</div>
-				</a>
+			<%	} %>		
 			<% } %>
 			
 			
@@ -39,10 +59,7 @@
 		</div>
 		<footer class="footer">
 			<ul class="list-inline">
-				<li>2016 © NinjaAdmin.</li>
-				<li><a href="#">Privacy</a></li>
-				<li><a href="#">Terms</a></li>
-				<li><a href="#">Help</a></li>
+				<li><li>2019 © DataBytes</li></li>
 			</ul>
 		</footer>
 	</div>
@@ -102,6 +119,10 @@
 		}
 	}
 })(jQuery);
+	ctrlC = ()=>{
+		code.select();
+		document.execCommand("copy");
+	}
 	</script>
 </body>
 </html>

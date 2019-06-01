@@ -16,6 +16,10 @@ module.exports = function(application){
 	application.get('/register', function(req, res){
 		res.render('autentication/register', {n: 'Registrar-se'});		
 	});
+	application.get('/logout', function(req, res){
+		req.session.destroy();
+		res.redirect('/login');		
+	});
 
 	application.post('/login', function(req, res){
 		var user = req.body;

@@ -49,7 +49,7 @@ module.exports = function(application){
                 // ... error checks
              
                 // Query
-                new sql.Request().query(`select avg(h.Temperatura) as 'avg', (select sen.local from sensor as sen where sen.id = s.id) as 'local' 
+                new sql.Request().query(`select avg(h.Temperatura) as 'avg', (select sen.local from sensor as sen where sen.id = s.id) as 'local', (select sen.Codigo from sensor as sen where sen.id = s.id) as 'key' 
                                          from Historico as h join Sensor as s on h.Sensor_Id = s.id 
                                          where s.Cliente_Id = ${req.session.user[0].Cliente_Id} group by s.id;`, (err, result) => {
                     // ... error checks

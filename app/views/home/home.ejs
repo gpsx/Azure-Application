@@ -51,25 +51,27 @@
 				</div>
 			</div>
 			<!-- /.col-lg-3 col-xs-12 -->
-			<% for(i = 0; i < avg.length; i++){ %>
-				<div class="col-lg-3 col-xs-12">
-					<div class="box-content">
-						<h4 class="box-title">Local: <%= avg[i].local%></h4>
-						<!-- /.box-title -->
-						<div class="text-center">
-							<div class="knob-wrap">
-								<input class="knob" data-width="150" data-height="150" data-bgColor="#ebeff2" data-fgColor="#42c451" data-readOnly=true data-thickness=".4" value="<%= avg[i].avg%>"  />
+			<% for(i = 0; i < avg.length; i++){ %>				
+					<div class="col-lg-3 col-xs-12">
+						<div class="box-content">
+							<a href="../sensors/detail/<%= avg[i].key[i] %>">
+								<h4 class="box-title">Local: <%= avg[i].local%></h4>
+							</a>
+							<!-- /.box-title -->
+							<div class="text-center">
+								<div class="knob-wrap">
+									<input class="knob" data-width="150" data-height="150" data-bgColor="#ebeff2" data-fgColor="#42c451" data-readOnly=true data-thickness=".4" value="<%= avg[i].avg%>"  />
+								</div>
+								<!-- .knob-wrap -->
 							</div>
-							<!-- .knob-wrap -->
 						</div>
+						<!-- /.box-content -->
 					</div>
-					<!-- /.box-content -->
-				</div>
 			<% } %>
 	
 		<footer class="footer">
 			<ul class="list-inline">
-				<li>2016 © NinjaAdmin.</li>
+				<li>2019 © DataBytes</li>
 				<li><a href="#">Privacy</a></li>
 				<li><a href="#">Terms</a></li>
 				<li><a href="#">Help</a></li>
