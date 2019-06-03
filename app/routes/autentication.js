@@ -70,7 +70,7 @@ module.exports = function(application){
 			if (verifyKey(result.recordset)) {
 				addClient(user, req, res)
 			}else{
-				renderAuth(res, 'register', 'Registrar-se');
+				res.redirect('/register')
 			}
 			
 		}).catch(err => {
@@ -100,7 +100,7 @@ module.exports = function(application){
 				('${client.nome_emp}', '${client.cnpj}', '${client.telefone}', '${client.endereco}', '${client.email}', '${client.key}')`) // or request.execute(procedure)
 		 
 			request.on('error', err => {
-				res.send(err)
+				console.log(err)
 			})
 			request.on('done', result => {
 				sql.close();
@@ -136,7 +136,7 @@ module.exports = function(application){
 			})
 			request.on('done', result => {
 				sql.close();
-				renderAuth(res, 'login', 'Login');			
+				res.redirect('/login')			
 			})
 			
 		})

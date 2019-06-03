@@ -8,7 +8,7 @@
 	<div class="main-content">
 		<div class="row small-spacing">
 			<% for (const sensor of sensors) { 
-					if(sensor.temps != ''){ %>
+					if(sensor.temps[0] != null){ %>
 						<a href="../sensors/detail/<%= sensor.key %>">
 							<div class="col-lg-4 col-xs-12">
 								<div class="box-content">
@@ -92,8 +92,6 @@
 
 	$(document).ready(function(){
 		Chart.traffic();
-		Chart.bar();
-		Chart.pie();
 		return false;
 	});
 

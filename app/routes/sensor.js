@@ -59,9 +59,11 @@ module.exports = function(application){
 	}
 	searchSensors = (req, res)=>{
 		sql.connect(config).then(() => {
-			return sql.query`Select s.Local, s.Codigo, s.id, a.Temperatura from Sensor as s left join Historico as a on a.Sensor_Id = s.id and Cliente_Id = ${req.session.user[0].Cliente_Id}`
+			return sql.query`Select s.Cliente_Id, s.Local, s.Codigo, s.id, a.Temperatura from Sensor as s left join Historico as a on a.Sensor_Id = s.id and Cliente_Id = ${req.session.user[0].Cliente_Id} order by a.Sensor_Id`
 		}).then(result => {
-			sql.close();									
+			sql.close();	
+			console.log(result.recordset);
+										
 			assocTemp(req, res, result.recordset);
 			
 		}).catch(err => {
@@ -74,38 +76,40 @@ module.exports = function(application){
 		ss = [];
 		for (let i = 0; i < sensors.length; i++) {
 
-            if(ss.length == 0){
+			if (sensors[i].Cliente_Id == req.session.user[0].Cliente_Id) {
+					if(ss.length == 0){
 
-				ss.push({
-					id: sensors[i].id, 
-					l: sensors[i].Local,
-					key: sensors[i].Codigo,
-					temps: []
-				});
-				console.log(ss, i);
+						ss.push({
+							id: sensors[i].id, 
+							l: sensors[i].Local,
+							key: sensors[i].Codigo,
+							temps: []
+						});
+						console.log(ss, i);
 
-            }else if(ss[ss.length-1].id != sensors[i].id){
+								}else if(ss[ss.length-1].id != sensors[i].id){
 
-				ss.push({
-					id: sensors[i].id, 
-					l: sensors[i].Local,
-					key: sensors[i].Codigo,
-					temps: []
-				})
-			}
-		}
-		for (const s of ss) {
-			for (const sensor of sensors) {
-				if(s.id == sensor.id){
-					s.temps.push(sensor.Temperatura); 
+						ss.push({
+							id: sensors[i].id, 
+							l: sensors[i].Local,
+							key: sensors[i].Codigo,
+							temps: []
+						})
+					}
+				}
+				for (const s of ss) {
+					for (const sensor of sensors) {
+						if(s.id == sensor.id){
+							s.temps.push(sensor.Temperatura); 
+						}
+					}
+				}
+				for (const s of ss) {
+					while (s.temps.length > 10) {
+						s.temps.shift();
+					}
 				}
 			}
-		}
-		for (const s of ss) {
-			while (s.temps.length > 10) {
-				s.temps.shift();
-			}
-		}
 		console.log(ss);
 		res.render('sensors/showAll', {n : 'Todos os sensores', sensors: ss});
 	}
