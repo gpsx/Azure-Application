@@ -1,4 +1,4 @@
-/* importar o módulo do framework express */
+﻿/* importar o módulo do framework express */
 var express = require('express');
 
 /* importar o módulo do consign */
@@ -24,6 +24,7 @@ var sql = require('mssql')
 
 
 var users = [];
+const PORT = process.env.PORT || 5000
 
 /* setar as variáveis 'view engine' e 'views' do express */
 app.set('view engine', 'ejs');
@@ -55,7 +56,8 @@ consign()
 	.into(app);
 
 /* parametrizar a porta de escuta */
-var server = app.listen(8080, function(){
+var server = app.listen(PORT, () => {	
+	console.log(`Executando na porta ${ PORT }`)
 	console.log('Servidor online e ativo');
 })
 
