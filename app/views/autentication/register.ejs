@@ -12,7 +12,7 @@
 			<!-- /.frm-input -->
 			<div class="frm-input"><input type="text" name="nome_emp" placeholder="Nome da Empresa" class="frm-inp"><i class="fa fa-industry frm-ico"></i></div>
 
-			<div class="frm-input"><input type="text" name="cnpj" placeholder="CNPJ" class="frm-inp"><i class="fa fa-bank frm-ico"></i></div>
+			<div class="frm-input"><input type="number" name="cnpj" placeholder="CNPJ" class="frm-inp"><i class="fa fa-bank frm-ico"></i></div>
 
 			<div class="frm-input"><input type="text" name="endereco" placeholder="Endereço" class="frm-inp"><i class="fa fa-map-pin frm-ico"></i></div>
 			
@@ -23,12 +23,18 @@
 
 			<div class="frm-input"><input type="password" name="pass" placeholder="Senha" class="frm-inp"><i class="fa fa-lock frm-ico"></i></div>
 
-			<div class="frm-input"><input type="password" name="key" placeholder="Key de Ativação" class="frm-inp"><i class="fa fa-shield frm-ico"></i></div>
+			<div class="frm-input"><input type="text" name="key" placeholder="Key de Ativação" class="frm-inp"><i class="fa fa-shield frm-ico"></i></div>
 			<!-- /.clearfix -->
+			<% if(err != ''){ %>
+			<div class="alert alert-danger alert-dismissible" role="alert"> 
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<%= err%>
+			</div>
+			<% } %>
 			<button type="submit" class="frm-submit">Registrar<i class="fa fa-arrow-circle-right"></i></button>
 
 			<!-- /.row -->
-			<a href="../login" class="a-link"><i class="fa fa-sign-in"></i>Já é cadatrado? faça o Login</a>
+			<a href="../login" class="a-link"><i class="fa fa-sign-in"></i>Já é cadatrado? Faça o Login</a>
 			<div class="frm-footer">DataBytes © 2019.</div>
 			<!-- /.footer -->
 		</div>

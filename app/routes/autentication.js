@@ -10,11 +10,11 @@ module.exports = function(application){
 	});
 	
 	application.get('/login', function(req, res){	
-		res.render('autentication/login', {n: 'Login'});			
+		res.render('autentication/login', {n: 'Login', err:''});			
 	});
 
 	application.get('/register', function(req, res){
-		res.render('autentication/register', {n: 'Registrar-se'});		
+		res.render('autentication/register', {n: 'Registrar-se', err:''});		
 	});
 	application.get('/logout', function(req, res){
 		req.session.destroy();
@@ -32,7 +32,7 @@ module.exports = function(application){
 		}).catch(err => {
 			console.log(err);
 			sql.close()
-			res.send('Falha ao estabelecer conexão com o banco');	
+			renderAuthErr(res, 'login', 'Login', 'Falha ao acessar o banco de dados');	
 		});
 
 		
@@ -50,7 +50,7 @@ module.exports = function(application){
 	autenticateLogin = (res, req, result) =>{
 		console.log(result);
 		if (result.length <= 0) {
-			res.redirect('/register');
+			renderAuthErr(res, 'login', 'Login', 'Usuário/Senhas Incorretos');
 		}else{
 			req.session.user = result;
 			console.log(req.session.user);
@@ -70,13 +70,13 @@ module.exports = function(application){
 			if (verifyKey(result.recordset)) {
 				addClient(user, req, res)
 			}else{
-				res.redirect('/register')
+				renderAuthErr(res, 'register', 'Registre-se', 'Key de autenticação incorreta/inexistente ou inativa');
 			}
 			
 		}).catch(err => {
 			console.log(err);
 			sql.close()
-			res.send('Falha ao estabelecer conexão com o banco');	
+			renderAuthErr(res, 'register', 'Registre-se', 'Key de autenticação incorreta/inexistente ou inativa');	
 		});
 	} 
 
@@ -103,6 +103,7 @@ module.exports = function(application){
 		 
 			request.on('error', err => {
 				console.log(err)
+				renderAuthErr(res, 'register', 'Registre-se', 'Falha ao acessar o banco de dados');
 			})
 			request.on('done', result => {
 				sql.close();
@@ -120,7 +121,7 @@ module.exports = function(application){
 		}).catch(err => {
 			console.log(err);
 			sql.close()
-			res.send('Falha ao estabelecer conexão com o banco');	
+			renderAuthErr(res, 'register', 'Registre-se', 'Falha ao acessar o banco de dados');	
 		});
 	}
 	registerUser = (res, idClient, user, pass, email) =>{
@@ -143,7 +144,7 @@ module.exports = function(application){
 			
 		})
 	}
-	renderAuth = (res, route, title) => {
-		res.render(`autentication/${route}`, {n: title});
+	renderAuthErr = (res, route, title, err) => {
+		res.render(`autentication/${route}`, {n: title, err: err});
 	}
 }

@@ -13,11 +13,12 @@
 			<!-- /.frm-input -->
 			<div class="frm-input"><input type="password" placeholder="Senha" class="frm-inp" name="pass"><i class="fa fa-lock frm-ico"></i></div>
 			<!-- /.frm-input -->
-			<div class="clearfix margin-bottom-20">
-				<!-- /.pull-left -->
-				<div class="pull-right"><a href="page-recoverpw.html" class="a-link"><i class="fa fa-unlock-alt"></i>Esqueceu a senha?</a></div>
-				<!-- /.pull-right -->
+			<% if(err != ''){ %>
+			<div class="alert alert-danger alert-dismissible" role="alert"> 
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<%= err%>
 			</div>
+			<% } %>
 			<!-- /.clearfix -->
 			<button type="submit" class="frm-submit">Login<i class="fa fa-arrow-circle-right"></i></button>
 			<!-- /.row -->
