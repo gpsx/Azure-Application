@@ -97,7 +97,9 @@ module.exports = function(application){
 			request.stream = true // You can set streaming differently for each request
 			request.query(`insert into Cliente(NomeEmp, CNPJ, Telefone, Endereco, Email, Chave) 
 			values
-				('${client.nome_emp}', '${client.cnpj}', '${client.telefone}', '${client.endereco}', '${client.email}', '${client.key}')`) // or request.execute(procedure)
+				('${client.nome_emp}', '${client.cnpj}', '${client.telefone}', '${client.endereco}', '${client.email}', '${client.key}');
+				update chaves set Estado = 'inativo' where chave = ${client.key}
+				`) // or request.execute(procedure)
 		 
 			request.on('error', err => {
 				console.log(err)
