@@ -1,3 +1,31 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+<script>
+	var socket = io.connect('localhost:5000'); //Se conecta ao servidor
+	socket.emit('requestNotifications');
+	setInterval(()=>{
+		console.log("PAM");
+		socket.emit('requestNotifications');
+	}, 300000);
+	socket.on('LastNotifications', (notifications)=>{
+		//console.log(notifications);	
+		noti.innerHTML = '';
+		for (const notification of notifications) {
+			console.log(notification);
+			
+			noti.innerHTML += `
+				<li>
+					<a href="#">
+						<span class="avatar bg-warning"><i class="fa fa-warning"></i></span>
+						<span class="name">Alerta</span>
+						<span class="desc">${notification.Mensagem}</span>
+						<span class="time">30 min</span>
+					</a>
+				</li>
+			`;
+		} 
+	})
+</script>
+
 <div class="fixed-navbar">
 		<div class="pull-left">
 			<button type="button" class="menu-mobile-button glyphicon glyphicon-menu-hamburger js__menu_mobile"></button>
@@ -7,7 +35,7 @@
 		<!-- /.pull-left -->
 		<div class="pull-right">
 			<!-- /.ico-item -->
-			<!-- <a href="#" class="ico-item ti-bell notice-alarm js__toggle_open" data-target="#notification-popup"></a> -->
+			<a href="#" class="ico-item ti-bell notice-alarm js__toggle_open" data-target="#notification-popup"></a>
 			<div class="ico-item">
 				<i class="ti-user"></i>
 				<ul class="sub-ico-item">
@@ -25,90 +53,11 @@
 		<h2 class="popup-title">Your Notifications</h2>
 		<!-- /.popup-title -->
 		<div class="content">
-			<ul class="notice-list">
-				<li>
-					<a href="#">
-						<span class="avatar"><img src="http://placehold.it/80x80" alt=""></span>
-						<span class="name">John Doe</span>
-						<span class="desc">Like your post: “Contact Form 7 Multi-Step”</span>
-						<span class="time">10 min</span>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<span class="avatar"><img src="http://placehold.it/80x80" alt=""></span>
-						<span class="name">Anna William</span>
-						<span class="desc">Like your post: “Facebook Messenger”</span>
-						<span class="time">15 min</span>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<span class="avatar bg-warning"><i class="fa fa-warning"></i></span>
-						<span class="name">Update Status</span>
-						<span class="desc">Failed to get available update data. To ensure the please contact us.</span>
-						<span class="time">30 min</span>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<span class="avatar"><img src="http://placehold.it/128x128" alt=""></span>
-						<span class="name">Jennifer</span>
-						<span class="desc">Like your post: “Contact Form 7 Multi-Step”</span>
-						<span class="time">45 min</span>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<span class="avatar"><img src="http://placehold.it/80x80" alt=""></span>
-						<span class="name">Michael Zenaty</span>
-						<span class="desc">Like your post: “Contact Form 7 Multi-Step”</span>
-						<span class="time">50 min</span>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<span class="avatar"><img src="http://placehold.it/80x80" alt=""></span>
-						<span class="name">Simon</span>
-						<span class="desc">Like your post: “Facebook Messenger”</span>
-						<span class="time">1 hour</span>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<span class="avatar bg-violet"><i class="fa fa-flag"></i></span>
-						<span class="name">Account Contact Change</span>
-						<span class="desc">A contact detail associated with your account has been changed.</span>
-						<span class="time">2 hours</span>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<span class="avatar"><img src="http://placehold.it/80x80" alt=""></span>
-						<span class="name">Helen 987</span>
-						<span class="desc">Like your post: “Facebook Messenger”</span>
-						<span class="time">Yesterday</span>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<span class="avatar"><img src="http://placehold.it/128x128" alt=""></span>
-						<span class="name">Denise Jenny</span>
-						<span class="desc">Like your post: “Contact Form 7 Multi-Step”</span>
-						<span class="time">Oct, 28</span>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<span class="avatar"><img src="http://placehold.it/80x80" alt=""></span>
-						<span class="name">Thomas William</span>
-						<span class="desc">Like your post: “Facebook Messenger”</span>
-						<span class="time">Oct, 27</span>
-					</a>
-				</li>
+			<ul class="notice-list" id="noti">
+				
 			</ul>
 			<!-- /.notice-list -->
-			<a href="#" class="notice-read-more">See more messages <i class="fa fa-angle-down"></i></a>
+			<a href="#" class="notice-read-more">Marcar todas como lidas <i class="fa fa-check-square-o"></i></a>
 		</div>
 		<!-- /.content -->
 	</div>

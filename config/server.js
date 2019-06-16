@@ -62,6 +62,27 @@ var server = app.listen(PORT, () => {
 })
 
 var s = io(server);
+seekLastNotifications = ()=>{
+	return new Promise((resolve,reject)=>{
+		
+		sql.connect(config, err => {
+			// ... error checks
+		 
+			// Query
+			new sql.Request().query(`select * from notificacoes where cliente_id = 1 and Estado = 'ativo'`, (err, result) => {
+				// ... error checks
+				sql.close();
+				!err ? resolve(result.recordset) : console.log(err)	 
+			})
+		 
+		})
+		 
+		sql.on('error', err => {
+			// ... error handler
+		})
+	})
+	
+}
 seekLastTempHumi = (key)=>{
 	return new Promise((resolve,reject)=>{
 		console.log(key);
@@ -90,9 +111,15 @@ s.on('connection', (socket) => {//É mostrado quando alguem se conecta
 		.then((th)=>{
 			s.to(socket.id).emit('LastTempHumi',th);
 		});
-			
-		
 		//s.socket(socket.id).emit('LastTempHumi',th);
+	})
+	socket.on('requestNotifications', ()=>{
+		seekLastNotifications()
+		.then((n)=>{
+			
+			
+			s.to(socket.id).emit('LastNotifications',n);
+		});
 	})
 	
 })

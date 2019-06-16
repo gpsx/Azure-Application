@@ -102,52 +102,6 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
 	<script src="assets/scripts/main.min.js"></script>
-	<script>
-		var temper = document.getElementById('temp').getContext('2d');
-		var t1 = new Chart(temper, {
-			// O tipo de gráfico que será criado
-			type: 'line',
-			// As configurações do gráfico
-			data: {
-				labels: ['a','a','a','a','a','a','a','a','a','a','a','a'],
-				datasets: [
-					<% for(i = 0; i < avg.length; i++){ %>
-						{
-							label: "<%= avg[i].local%>",
-							borderColor: "rgb(235, 40, 40)",
-							data: [<%= avg[i].avg%>],
-							fill: true,
-							pointStyle: 'circle',
-							backgroundColor: 'rgb(235, 40, 40, .3)',
-							pointRadius: 5,
-							pointHoverRadius: 7,
-							lineTension: 0,
-						}
-						<% if(i != (avg.length -1)){ %>
-							,
-						<% } %>
-					<% } %>
-				]
-			},
-			// Aqui será Configurado o título do gráfico e deixá-lo responsivo
-			options: {
-				responsive: true,
-				hoverMode: 'index',
-				stacked: false,
-				scales: {
-					yAxes: [{
-						ticks: {
-							beginAtZero: false,
-							// Inclui a °C para o gráfico de Temperatura
-							callback: function(value) {
-								return value + '°C';
-							}
-						}
-					}]
-				}
-			}
-			
-		});
-	</script>
+	
 </body>
 </html>
