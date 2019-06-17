@@ -69,7 +69,7 @@ seekLastNotifications = ()=>{
 			// ... error checks
 		 
 			// Query
-			new sql.Request().query(`select * from notificacoes where cliente_id = 1 and Estado = 'ativo'`, (err, result) => {
+			new sql.Request().query(`select * from notificacoes where cliente_id = 1 and Estado = 'ativo' order by id desc`, (err, result) => {
 				// ... error checks
 				sql.close();
 				!err ? resolve(result.recordset) : console.log(err)	 

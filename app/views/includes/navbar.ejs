@@ -1,28 +1,75 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+<script src="../../assets/scripts/jquery.min.js"></script>
+<!-- Toastr -->
+<link rel="stylesheet" href="assets/plugin/toastr/toastr.css">
+<!-- Toastr -->
+<script src="../../assets/plugin/toastr/toastr.min.js"></script>
+<script src="../../assets/scripts/toastr.demo.min.js"></script>
 <script>
+	let show = false;
+	toastr.options = {
+		"closeButton": false,
+		"debug": false,
+		"newestOnTop": false,
+		"progressBar": true,
+		"rtl": false,
+		"positionClass": "toast-bottom-right",
+		"preventDuplicates": false,
+		"showDuration": 1000,
+		"hideDuration": 1000,
+		"timeOut": 5000,
+		"extendedTimeOut": 1000,
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
 	var socket = io.connect('localhost:5000'); //Se conecta ao servidor
 	socket.emit('requestNotifications');
+
 	setInterval(()=>{
 		console.log("PAM");
 		socket.emit('requestNotifications');
-	}, 300000);
+	}, 60000);
+	var nLength = [];
 	socket.on('LastNotifications', (notifications)=>{
 		//console.log(notifications);	
 		noti.innerHTML = '';
+		nLength[0] = notifications.length -1;
 		for (const notification of notifications) {
-			console.log(notification);
-			
 			noti.innerHTML += `
 				<li>
-					<a href="#">
-						<span class="avatar bg-warning"><i class="fa fa-warning"></i></span>
+					<a href="../../notification/detail/${notification.key_sensor}">
+						<span class="avatar bg-${notification.tipo == 'Alerta' ? 'warning' : 'info'}"><i class="fa fa-${notification.tipo == 'Alerta' ? 'warning' : 'flag'}"></i></span>
 						<span class="name">${notification.tipo}</span>
 						<span class="desc">${notification.Mensagem}</span>
 						<span class="time">${notification.data_hora}</span>
 					</a>
 				</li>
 			`;
-		} 
+		}
+		if (nLength[0] > nLength[1]) {
+			dif = nLength[0] - nLength[1]
+			console.log(dif);
+			for (let i = dif; i < notifications.length; i--) {
+				toastr[notifications[i].tipo == 'Alerta' ? 'warning' : 'info'](notifications[i].Mensagem, notifications[i].tipo)
+				
+			}	
+		}
+		nLength[1] = nLength[0];
+
+		if (notifications.length <= 0) {
+			noti.innerHTML = `
+				<li>
+					<a href="#">
+						<span class="avatar bg-success"><i class="fa fa-check-square"></i></span>			
+						<span class="name">Tudo limpo :)</span>
+						<span class="desc">Todas as Notificações foram lidas</span>
+					</a>
+				</li>
+			`
+		}
+
 	})
 </script>
 
@@ -39,8 +86,8 @@
 			<div class="ico-item">
 				<i class="ti-user"></i>
 				<ul class="sub-ico-item">
-					<li><a href="../profile">Configurações</a></li>
-					<li><a href="../logout">Sair</a></li>
+					<li><a href="../../profile">Configurações</a></li>
+					<li><a href="../../logout">Sair</a></li>
 				</ul>
 				<!-- /.sub-ico-item -->
 			</div>
@@ -50,14 +97,20 @@
 	<!-- /.fixed-navbar -->
 	
 	<div id="notification-popup" class="notice-popup js__toggle" data-space="75">
-		<h2 class="popup-title">Your Notifications</h2>
+		<h2 class="popup-title">Suas Notificações</h2>
 		<!-- /.popup-title -->
 		<div class="content">
 			<ul class="notice-list" id="noti">
-				
+				<li>
+					<a href="#">
+						<span class="avatar bg-success"><i class="fa fa-check-square"></i></span>			
+						<span class="name">Tudo limpo :)</span>
+						<span class="desc">Todas as Notificações foram lidas</span>
+					</a>
+				</li>
 			</ul>
 			<!-- /.notice-list -->
-			<a href="#" class="notice-read-more">Marcar todas como lidas <i class="fa fa-check-square-o"></i></a>
+			<a href="/notification/readAll" class="notice-read-more">Marcar todas como lidas <i class="fa fa-check-square-o"></i></a>
 		</div>
 		<!-- /.content -->
 	</div>
