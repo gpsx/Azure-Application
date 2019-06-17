@@ -24,7 +24,7 @@
 		"showMethod": "fadeIn",
 		"hideMethod": "fadeOut"
 	}
-	var socket = io.connect('localhost:5000'); //Se conecta ao servidor
+	var socket = io.connect('http://databytess.herokuapp.com'); //Se conecta ao servidor
 	socket.emit('requestNotifications');
 
 	setInterval(()=>{
